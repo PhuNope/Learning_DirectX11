@@ -50,14 +50,28 @@ target_link_libraries(${PROJECT_NAME} PRIVATE Microsoft::DirectXMath)
 # Uncomment if using the DirectX Tool Kit
 # find_package(directxtk CONFIG REQUIRED)
 # target_link_libraries(${PROJECT_NAME} PRIVATE Microsoft::DirectXTK)
-target_include_directories(${PROJECT_NAME} PRIVATE
-        "${CMAKE_CURRENT_SOURCE_DIR}/Libs/directxtk/Include"
+#target_include_directories(${PROJECT_NAME} PRIVATE
+#        "${CMAKE_CURRENT_SOURCE_DIR}/Libs/directxtk/Include"
+#)
+#target_link_libraries(${PROJECT_NAME} PRIVATE
+#        optimized "${CMAKE_CURRENT_SOURCE_DIR}/Libs/directxtk/x64/Release/DirectXTK.lib"
+#        debug "${CMAKE_CURRENT_SOURCE_DIR}/Libs/directxtk/x64/Debug/DirectXTK.lib"
+#        d3d11 dxgi d3dcompiler
+#)
+add_library(DirectXTK_Lib STATIC IMPORTED GLOBAL)
+set_target_properties(DirectXTK_Lib PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}/Libs/directxtk/Include"
+
+        IMPORTED_LOCATION_RELEASE "${CMAKE_CURRENT_SOURCE_DIR}/Libs/directxtk/x64/Release/DirectXTK.lib"
+        IMPORTED_LOCATION_RELWITHDEBINFO "${CMAKE_CURRENT_SOURCE_DIR}/Libs/directxtk/x64/Release/DirectXTK.lib"
+        IMPORTED_LOCATION_MINSIZEREL "${CMAKE_CURRENT_SOURCE_DIR}/Libs/directxtk/x64/Release/DirectXTK.lib"
+
+        IMPORTED_LOCATION_DEBUG "${CMAKE_CURRENT_SOURCE_DIR}/Libs/directxtk/x64/Debug/DirectXTK.lib"
 )
-target_link_libraries(${PROJECT_NAME} PRIVATE
-        optimized "${CMAKE_CURRENT_SOURCE_DIR}/Libs/directxtk/x64/Release/DirectXTK.lib"
-        debug "${CMAKE_CURRENT_SOURCE_DIR}/Libs/directxtk/x64/Debug/DirectXTK.lib"
-        d3d11 dxgi d3dcompiler
-)
+add_library(MyEngine::DirectXTK ALIAS DirectXTK_Lib)
+
+# add sub project
+add_subdirectory(src/Chapter_1_VectorAlgebra)
 
 # Uncomment if using XAudio2Redist (required for MINGW)
 # find_package(xaudio2redist CONFIG REQUIRED)
