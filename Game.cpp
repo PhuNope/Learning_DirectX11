@@ -11,8 +11,7 @@ using namespace DirectX;
 
 using Microsoft::WRL::ComPtr;
 
-Game::Game() noexcept(false)
-{
+Game::Game() noexcept(false) {
     m_deviceResources = std::make_unique<DX::DeviceResources>();
     // TODO: Provide parameters for swapchain format, depth/stencil format, and backbuffer count.
     //   Add DX::DeviceResources::c_AllowTearing to opt-in to variable rate displays.
@@ -21,8 +20,7 @@ Game::Game() noexcept(false)
 }
 
 // Initialize the Direct3D resources required to run.
-void Game::Initialize(HWND window, int width, int height)
-{
+void Game::Initialize(HWND window, int width, int height) {
     m_deviceResources->SetWindow(window, width, height);
 
     m_deviceResources->CreateDeviceResources();
@@ -40,34 +38,32 @@ void Game::Initialize(HWND window, int width, int height)
 }
 
 #pragma region Frame Update
+
 // Executes the basic game loop.
-void Game::Tick()
-{
-    m_timer.Tick([&]()
-    {
-        Update(m_timer);
+void Game::Tick() {
+    m_timer.Tick([&]() {
+      Update(m_timer);
     });
 
     Render();
 }
 
 // Updates the world.
-void Game::Update(DX::StepTimer const& timer)
-{
+void Game::Update(DX::StepTimer const &timer) {
     float elapsedTime = float(timer.GetElapsedSeconds());
 
     // TODO: Add your game logic here.
     elapsedTime;
 }
+
 #pragma endregion
 
 #pragma region Frame Render
+
 // Draws the scene.
-void Game::Render()
-{
+void Game::Render() {
     // Don't try to render anything before the first Update.
-    if (m_timer.GetFrameCount() == 0)
-    {
+    if (m_timer.GetFrameCount() == 0) {
         return;
     }
 
@@ -86,8 +82,7 @@ void Game::Render()
 }
 
 // Helper method to clear the back buffers.
-void Game::Clear()
-{
+void Game::Clear() {
     m_deviceResources->PIXBeginEvent(L"Clear");
 
     // Clear the views.
@@ -105,45 +100,40 @@ void Game::Clear()
 
     m_deviceResources->PIXEndEvent();
 }
+
 #pragma endregion
 
 #pragma region Message Handlers
+
 // Message handlers
-void Game::OnActivated()
-{
+void Game::OnActivated() {
     // TODO: Game is becoming active window.
 }
 
-void Game::OnDeactivated()
-{
+void Game::OnDeactivated() {
     // TODO: Game is becoming background window.
 }
 
-void Game::OnSuspending()
-{
+void Game::OnSuspending() {
     // TODO: Game is being power-suspended (or minimized).
 }
 
-void Game::OnResuming()
-{
+void Game::OnResuming() {
     m_timer.ResetElapsedTime();
 
     // TODO: Game is being power-resumed (or returning from minimize).
 }
 
-void Game::OnWindowMoved()
-{
+void Game::OnWindowMoved() {
     const auto r = m_deviceResources->GetOutputSize();
     m_deviceResources->WindowSizeChanged(r.right, r.bottom);
 }
 
-void Game::OnDisplayChange()
-{
+void Game::OnDisplayChange() {
     m_deviceResources->UpdateColorSpace();
 }
 
-void Game::OnWindowSizeChanged(int width, int height)
-{
+void Game::OnWindowSizeChanged(int width, int height) {
     if (!m_deviceResources->WindowSizeChanged(width, height))
         return;
 
@@ -153,18 +143,18 @@ void Game::OnWindowSizeChanged(int width, int height)
 }
 
 // Properties
-void Game::GetDefaultSize(int& width, int& height) const noexcept
-{
+void Game::GetDefaultSize(int &width, int &height) const noexcept {
     // TODO: Change to desired default window size (note minimum size is 320x200).
     width = 800;
     height = 600;
 }
+
 #pragma endregion
 
 #pragma region Direct3D Resources
+
 // These are the resources that depend on the device.
-void Game::CreateDeviceDependentResources()
-{
+void Game::CreateDeviceDependentResources() {
     auto device = m_deviceResources->GetD3DDevice();
 
     // TODO: Initialize device dependent objects here (independent of window size).
@@ -172,20 +162,18 @@ void Game::CreateDeviceDependentResources()
 }
 
 // Allocate all memory resources that change on a window SizeChanged event.
-void Game::CreateWindowSizeDependentResources()
-{
+void Game::CreateWindowSizeDependentResources() {
     // TODO: Initialize windows-size dependent objects here.
 }
 
-void Game::OnDeviceLost()
-{
+void Game::OnDeviceLost() {
     // TODO: Add Direct3D resource cleanup here.
 }
 
-void Game::OnDeviceRestored()
-{
+void Game::OnDeviceRestored() {
     CreateDeviceDependentResources();
 
     CreateWindowSizeDependentResources();
 }
+
 #pragma endregion
