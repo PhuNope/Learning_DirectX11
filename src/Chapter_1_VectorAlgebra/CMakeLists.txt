@@ -5,8 +5,12 @@ project(Chapter1_Vector_Algebra)
 add_executable(${PROJECT_NAME} main.cpp)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
-        MyEngine::DirectXTK
-        d3d11 dxgi d3dcompiler
+        Common
 )
 
-target_link_options(${PROJECT_NAME} PRIVATE /SUBSYSTEM:CONSOLE)
+if (MSVC)
+    target_link_options(${PROJECT_NAME}
+            PRIVATE
+            /SUBSYSTEM:CONSOLE
+    )
+endif ()

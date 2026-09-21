@@ -45,7 +45,6 @@ if (MSVC)
 endif ()
 
 find_package(directxmath CONFIG REQUIRED)
-target_link_libraries(${PROJECT_NAME} PRIVATE Microsoft::DirectXMath)
 
 # Uncomment if using the DirectX Tool Kit
 # find_package(directxtk CONFIG REQUIRED)
@@ -68,10 +67,31 @@ set_target_properties(DirectXTK_Lib PROPERTIES
 
         IMPORTED_LOCATION_DEBUG "${CMAKE_CURRENT_SOURCE_DIR}/Libs/directxtk/x64/Debug/DirectXTK.lib"
 )
+
 add_library(MyEngine::DirectXTK ALIAS DirectXTK_Lib)
 
+# Dependency for chapters
+add_library(Common INTERFACE)
+target_link_libraries(Common INTERFACE
+        MyEngine::DirectXTK
+        #        Microsoft::DirectXTK
+        d3d11 dxgi d3dcompiler
+        Microsoft::DirectXMath
+)
+
 # add sub project
-add_subdirectory(src/Chapter_1_VectorAlgebra)
+#add_subdirectory(src/Chapter_1_VectorAlgebra)
+file(GLOB CHILD_PROJECTS CONFIGURE_DEPENDS
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/*"
+)
+
+foreach (CHILD_PROJECT ${CHILD_PROJECTS})
+    if (IS_DIRECTORY "${CHILD_PROJECT}"
+            AND EXISTS "${CHILD_PROJECT}/CMakeLists.txt")
+        add_subdirectory("${CHILD_PROJECT}")
+
+    endif ()
+endforeach ()
 
 # Uncomment if using XAudio2Redist (required for MINGW)
 # find_package(xaudio2redist CONFIG REQUIRED)
